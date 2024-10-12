@@ -4,7 +4,7 @@ import { useState } from "react";
 import Head from "next/head";
 import dynamic from "next/dynamic";
 
-const EventMap = dynamic(() => import("@/components/event-map"), {
+const EventMap = dynamic(() => import("../../components/event-map"), {
   loading: () => <p>Loading map...</p>,
   ssr: false,
 });
