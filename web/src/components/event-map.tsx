@@ -1,9 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState, useEffect } from "react";
-import { MapContainer, TileLayer, CircleMarker, Popup } from "react-leaflet";
+import { MapContainer, TileLayer, Popup, CircleMarker } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { StreamTweet } from "../../lib/types/xapi";
 import { MyEvent } from "../../lib/types/event";
+import { motion } from "framer-motion";
+import { stateLocations } from "../../lib/constants/map";
 
 interface MapProps {
   onSelectEvent: (event: MyEvent) => void;
@@ -54,13 +56,17 @@ const EventMap: React.FC<MapProps> = ({ onSelectEvent }) => {
               setTweets((prevTweets) =>
                 [...prevTweets, streamTweet].slice(0, 1000)
               ); // at most 1000 tweets
+              // get random state location
+              const location = Array.from(stateLocations.values())[
+                Math.floor(Math.random() * stateLocations.size)
+              ];
               setEvents((prevEvents) =>
                 [
                   ...prevEvents,
                   {
                     title: tweet.text,
-                    latitude: 40.7128,
-                    longitude: -74.006,
+                    latitude: location.latitude,
+                    longitude: location.longitude,
                     tweets: [tweet],
                     emergency_level: 1,
                     created_at: new Date().toISOString(),
@@ -84,7 +90,7 @@ const EventMap: React.FC<MapProps> = ({ onSelectEvent }) => {
   return (
     <MapContainer
       center={[39.8283, -98.5795]}
-      zoom={5}
+      zoom={4}
       style={{ height: "800px", width: "100%" }}
     >
       <TileLayer
@@ -92,21 +98,27 @@ const EventMap: React.FC<MapProps> = ({ onSelectEvent }) => {
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       />
       {events.map((event, index) => (
-        <CircleMarker
+        <motion.div
           key={index}
-          center={[event.latitude, event.longitude]}
-          radius={10}
-          fillColor={"red"}
-          color="black"
-          weight={1}
-          opacity={1}
-          fillOpacity={0.8}
-          eventHandlers={{
-            click: () => onSelectEvent(event),
-          }}
+          initial={{ scale: 1 }}
+          animate={{ scale: [1, 1.2, 1] }}
+          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
         >
-          <Popup>{event.title}</Popup>
-        </CircleMarker>
+          <CircleMarker
+            center={[event.latitude, event.longitude]}
+            radius={10}
+            fillColor={"red"}
+            color="red"
+            weight={1}
+            opacity={1}
+            fillOpacity={0.8}
+            eventHandlers={{
+              click: () => onSelectEvent(event),
+            }}
+          >
+            <Popup>{event.title}</Popup>
+          </CircleMarker>
+        </motion.div>
       ))}
     </MapContainer>
   );

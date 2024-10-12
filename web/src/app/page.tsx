@@ -22,7 +22,12 @@ export default function Home() {
       </Head>
 
       <main className="p-4">
-        <h1 className="text-2xl font-bold mb-4">Interactive US Event Map</h1>
+        <h1 className="text-2xl font-bold mb-4">XMap</h1>
+        <h3 className="text-md mb-4">
+          Real-Time Disaster Monitoring Platform that utilizes X stream data to
+          dynamically monitor, predict, and display disasters and accidents on
+          an interactive map.
+        </h3>
         <EventMap onSelectEvent={setSelectedEvent} />
         {selectedEvent && (
           <div className="mt-4">
