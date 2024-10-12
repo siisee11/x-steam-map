@@ -1,20 +1,30 @@
 import { NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
-import { parse } from "csv-parse/sync";
+import Papa from "papaparse";
 
 export async function GET() {
   try {
     const filePath = path.join(process.cwd(), "data", "events.csv");
     const fileContent = fs.readFileSync(filePath, "utf-8");
-    const records = parse(fileContent, {
-      columns: true,
-      skip_empty_lines: true,
+
+    // Parse the CSV content using PapaParse
+    const { data, errors } = Papa.parse(fileContent, {
+      header: true,
+      skipEmptyLines: true,
     });
 
-    console.log(records);
+    if (errors.length) {
+      console.error("Error parsing CSV file:", errors);
+      return NextResponse.json(
+        { error: "Error parsing CSV file" },
+        { status: 500 }
+      );
+    }
 
-    return NextResponse.json(records);
+    console.log(data);
+
+    return NextResponse.json(data);
   } catch (error) {
     console.error("Error reading CSV file:", error);
     return NextResponse.json(
