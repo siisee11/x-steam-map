@@ -9,11 +9,12 @@ const EventMap = dynamic(() => import("../components/event-map"), {
   ssr: false,
 });
 
-interface Event {
+export interface Event {
   title: string;
   latitude: number;
   longitude: number;
   tweet_url: string;
+  emergency_level: number;
 }
 
 export default function Home() {
@@ -36,6 +37,7 @@ export default function Home() {
             <p>Title: {selectedEvent.title}</p>
             <p>Latitude: {selectedEvent.latitude}</p>
             <p>Longitude: {selectedEvent.longitude}</p>
+            <p>Emergency Level: {selectedEvent.emergency_level}</p>
             <p>
               Tweet URL:{" "}
               <a

@@ -12,6 +12,8 @@ export async function GET() {
       skip_empty_lines: true,
     });
 
+    console.log(records);
+
     return NextResponse.json(records);
   } catch (error) {
     console.error("Error reading CSV file:", error);
