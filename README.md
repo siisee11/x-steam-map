@@ -31,3 +31,12 @@ X-stream Map aims to improve community safety by enhancing disaster response cap
 - **Impact Evaluation:** Analyze the consequences of incidents to inform response strategies.
 - **User-Friendly Interface:** An intuitive dashboard for easy access to critical information.
 
+
+## Changes
+
+### 1. Fetch tweets
+
+```
+npm run dev
+open http://localhost:3000/editor
+```
