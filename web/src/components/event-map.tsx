@@ -1,33 +1,85 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState, useEffect } from "react";
 import { MapContainer, TileLayer, CircleMarker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import { Event } from "../app/page";
+import { StreamTweet } from "../../lib/types/xapi";
+import { MyEvent } from "../../lib/types/event";
 
 interface MapProps {
-  onSelectEvent: (event: Event) => void;
+  onSelectEvent: (event: MyEvent) => void;
 }
 
 const EventMap: React.FC<MapProps> = ({ onSelectEvent }) => {
-  const [events, setEvents] = useState<Event[]>([]);
-
-  const getMarkerColor = (emergencyLevel: number) => {
-    switch (emergencyLevel) {
-      case 1:
-        return "#00FF00";
-      case 2:
-        return "#FFFF00";
-      case 3:
-        return "#FF0000";
-      default:
-        return "#0000FF";
-    }
-  };
+  const [isStreaming, setIsStreaming] = useState(false);
+  const [events, setEvents] = useState<MyEvent[]>([]);
+  const [tweets, setTweets] = useState<StreamTweet[]>([]);
 
   useEffect(() => {
-    fetch("/api/events")
-      .then((response) => response.json())
-      .then((data) => setEvents(data));
+    startStream();
   }, []);
+
+  const startStream = async () => {
+    setIsStreaming(true);
+    setTweets([]); // Clear existing tweets when starting a new stream
+
+    try {
+      const response = await fetch("/api/x2/tweets/search/stream", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ action: "start" }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const reader = response.body?.getReader();
+      const decoder = new TextDecoder();
+
+      while (true) {
+        const { done, value } = await reader!.read();
+        if (done) break;
+
+        const chunk = decoder.decode(value);
+        const lines = chunk.split("\n");
+
+        for (const line of lines) {
+          if (line.startsWith("data: ")) {
+            try {
+              const jsonString = line.slice(6); // Remove 'data: ' prefix
+              const streamTweet: StreamTweet = JSON.parse(jsonString);
+              const tweet = streamTweet.data;
+              setTweets((prevTweets) =>
+                [...prevTweets, streamTweet].slice(0, 1000)
+              ); // at most 1000 tweets
+              setEvents((prevEvents) =>
+                [
+                  ...prevEvents,
+                  {
+                    title: tweet.text,
+                    latitude: 40.7128,
+                    longitude: -74.006,
+                    tweets: [tweet],
+                    emergency_level: 1,
+                    created_at: new Date().toISOString(),
+                  } as MyEvent,
+                ].slice(0, 1000)
+              ); // at most 1000 tweets
+              // updateTweetStats(tweet);
+            } catch (e) {
+              console.error("Error parsing JSON:", e);
+            }
+          }
+        }
+      }
+    } catch (error) {
+      console.error("Failed to start stream:", error);
+    } finally {
+      setIsStreaming(false);
+    }
+  };
 
   return (
     <MapContainer
@@ -44,7 +96,7 @@ const EventMap: React.FC<MapProps> = ({ onSelectEvent }) => {
           key={index}
           center={[event.latitude, event.longitude]}
           radius={10}
-          fillColor={getMarkerColor(event.emergency_level)}
+          fillColor={"red"}
           color="black"
           weight={1}
           opacity={1}

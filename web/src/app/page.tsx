@@ -3,23 +3,15 @@
 import { useState } from "react";
 import Head from "next/head";
 import dynamic from "next/dynamic";
+import { MyEvent } from "../../lib/types/event";
 
 const EventMap = dynamic(() => import("../components/event-map"), {
   loading: () => <p>Loading map...</p>,
   ssr: false,
 });
 
-export interface Event {
-  title: string;
-  latitude: number;
-  longitude: number;
-  tweet_url: string;
-  emergency_level: number;
-  created_at: string; //  "Wed Jan 06 18:40:40 +0000 2021"
-}
-
 export default function Home() {
-  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+  const [selectedEvent, setSelectedEvent] = useState<MyEvent | null>(null);
 
   return (
     <div>
@@ -40,16 +32,6 @@ export default function Home() {
             <p>Longitude: {selectedEvent.longitude}</p>
             <p>Emergency Level: {selectedEvent.emergency_level}</p>
             <p>Created At: {selectedEvent.created_at}</p>
-            <p>
-              Tweet URL:{" "}
-              <a
-                href={selectedEvent.tweet_url}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {selectedEvent.tweet_url}
-              </a>
-            </p>
           </div>
         )}
       </main>
