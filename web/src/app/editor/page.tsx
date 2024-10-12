@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { StreamRuleResponse, StreamRule, StreamRuleError, StreamTweet } from '../../../lib/types/xapi';
-import TweetCard from '@/components/tweet-card';
+import TweetCard from '../../components/tweet-card';
 
 export default function EditorPage() {
   const [grokInput, setGrokInput] = useState('');
