@@ -15,6 +15,7 @@ export interface Event {
   longitude: number;
   tweet_url: string;
   emergency_level: number;
+  created_at: string; //  "Wed Jan 06 18:40:40 +0000 2021"
 }
 
 export default function Home() {
@@ -38,6 +39,7 @@ export default function Home() {
             <p>Latitude: {selectedEvent.latitude}</p>
             <p>Longitude: {selectedEvent.longitude}</p>
             <p>Emergency Level: {selectedEvent.emergency_level}</p>
+            <p>Created At: {selectedEvent.created_at}</p>
             <p>
               Tweet URL:{" "}
               <a

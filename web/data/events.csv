@@ -1,6 +1,6 @@
-title,latitude,longitude,tweet_url,emergency_level
-New York Tech Meetup,40.7128,-74.0060,https://twitter.com/nytm/status/1234567890,1
-San Francisco AI Conference,37.7749,-122.4194,https://twitter.com/sfai/status/2345678901,2
-Chicago Food Festival,41.8781,-87.6298,https://twitter.com/chicagofood/status/3456789012,1
-Miami Beach Party,25.7617,-80.1918,https://twitter.com/miamibeach/status/4567890123,3
-Seattle Coffee Expo,47.6062,-122.3321,https://twitter.com/seattlecoffee/status/5678901234,2
+title,latitude,longitude,tweet_url,emergency_level,created_at
+New York Tech Meetup,40.7128,-74.0060,https://twitter.com/nytm/status/1234567890,1,Wed Jan 06 18:40:40 +0000 2021
+San Francisco AI Conference,37.7749,-122.4194,https://twitter.com/sfai/status/2345678901,2,Wed Jan 06 18:40:40 +0000 2021
+Chicago Food Festival,41.8781,-87.6298,https://twitter.com/chicagofood/status/3456789012,1,Wed Jan 06 18:40:40 +0000 2021
+Miami Beach Party,25.7617,-80.1918,https://twitter.com/miamibeach/status/4567890123,3,Wed Jan 06 18:40:40 +0000 2021
+Seattle Coffee Expo,47.6062,-122.3321,https://twitter.com/seattlecoffee/status/5678901234,2,Wed Jan 06 18:40:40 +0000 2021
