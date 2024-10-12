@@ -4,21 +4,17 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { StreamRuleResponse, StreamRule, StreamRuleError, StreamTweet } from '../../../lib/types/xapi';
 import TweetCard from '../../components/tweet-card';
+import RulesList from '../../components/rules-list';
 
 export default function EditorPage() {
   const [grokInput, setGrokInput] = useState('');
   const [grokResult, setGrokResult] = useState<{[key: string]: string | number} | null>(null);
   const [grokIsLoading, setGrokIsLoading] = useState(false);
 
-//   const [tweetInput, setTweetInput] = useState('');
-//   const [tweetResult, setTweetResult] = useState<{[key: string]: string} | null>(null);
-//   const [tweetIsLoading, setTweetIsLoading] = useState(false);
-
   const [streamRules, setStreamRules] = useState<StreamRule[]>([]);
 
   const [tweets, setTweets] = useState<StreamTweet[]>([]);
   const [isStreaming, setIsStreaming] = useState(false);
-//   const eventSourceRef = useRef<EventSource | null>(null);
 
   const [tweetStats, setTweetStats] = useState<{ total: number, byRule: { [key: string]: number } }>({ total: 0, byRule: {} });
 
@@ -40,21 +36,6 @@ export default function EditorPage() {
       setGrokIsLoading(false);
     }
   };
-
-//   const handleTweetSubmit = async (e: React.FormEvent) => {
-//     e.preventDefault();
-//     setTweetIsLoading(true);
-
-//     try {
-//       const response = await axios.post('/api/x2/tweets/search/stream', { query: tweetInput });
-//       setTweetResult(response.data);
-//     } catch (error) {
-//       console.error('Error calling X\'s Tweets API:', error);
-//       setTweetResult({ error: 'An error occurred while processing your request.' });
-//     } finally {
-//       setTweetIsLoading(false);
-//     }
-//   };
 
   const fetchStreamRules = async () => {
     try {
@@ -100,32 +81,10 @@ export default function EditorPage() {
 
   // Updated exampleRules
   const exampleRules: Pick<StreamRule, "value" | "tag">[] = [
+    { value: "hurricane has:images -is:retweet", tag: "Hurricane with images" },
     { value: "dog has:images -is:retweet", tag: "Dog images" },
     { value: "cat has:images -grumpy", tag: "Happy cat images" }
   ];
-
-  const RulesList = ({ rules }: { rules: Pick<StreamRule, "value" | "tag">[] }) => {
-    return (
-      <div className="overflow-x-auto">
-        <table className="min-w-full bg-white">
-          <thead>
-            <tr className="bg-gray-100">
-              <th className="px-4 py-2 text-left">Value</th>
-              <th className="px-4 py-2 text-left">Tag</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rules.map((rule, index) => (
-              <tr key={index} className="border-b">
-                <td className="px-4 py-2">{rule.value}</td>
-                <td className="px-4 py-2">{rule.tag || ''}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    );
-  };
 
   const startStream = async () => {
     setIsStreaming(true);
@@ -209,6 +168,28 @@ export default function EditorPage() {
     setIsStreaming(false);
   };
 
+  const removeStreamRule = async (value: string) => {
+    console.log('removeStreamRule', value);
+    const id = streamRules.find((rule) => rule.value === value)?.id;
+    if (id) {
+        const data = {
+            "delete": {
+                "ids": [id],
+            }
+        }
+        const response = await axios.post('/api/x2/tweets/search/stream/rules', data);
+
+        console.log('response', response);
+        if (response.data.errors) {
+            const errors: StreamRuleError[] = response.data.errors;
+            const message = errors.map(error => `${error.title}: ${error.value}`).join('\n');
+            alert(`Error deleting stream rule:\n${message}`);
+        }
+
+        setStreamRules(streamRules.filter((rule) => rule.value !== value));
+    }
+  };
+
   return (
     <div className="flex h-screen w-screen text-black bg-white overflow-hidden">
       {/* Grok API Tester */}
@@ -267,7 +248,7 @@ export default function EditorPage() {
         {/* Display current stream rules */}
         <div className="mb-4">
           <h2 className="text-xl font-semibold mb-2">Current Stream Rules:</h2>
-          <RulesList rules={streamRules} />
+          <RulesList rules={streamRules} onRemove={removeStreamRule} />
         </div>
 
         {/* Example stream rules */}
