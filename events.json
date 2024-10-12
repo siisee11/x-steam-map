@@ -1,0 +1,14 @@
+[
+  {
+    "title": "Music Festival",
+    "latitude": 40.7128,
+    "longitude": -74.006,
+    "tweet_url": "https://twitter.com/event/status/1234567890"
+  },
+  {
+    "title": "Art Exhibition",
+    "latitude": 34.0522,
+    "longitude": -118.2437,
+    "tweet_url": "https://twitter.com/event/status/0987654321"
+  }
+]
