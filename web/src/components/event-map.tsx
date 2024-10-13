@@ -118,45 +118,39 @@ const EventMap: React.FC<MapProps> = ({ onSelectEvent }) => {
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       />
       {events.map((event, index) => (
-        <motion.div
-          key={index}
-          initial={{ scale: 1 }}
-          animate={{ scale: [1, 1.2, 1] }}
-          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+        <CircleMarker
+          key={event.created_at}
+          center={[event.geo.latitude, event.geo.longitude]}
+          radius={
+            Math.log(locationToEventCount.get(event.geo.state) || 1) * 10 + 2
+          }
+          fillColor={index % 2 === 0 ? "yellow" : "red"}
+          color="red"
+          weight={1}
+          opacity={0.5}
+          fillOpacity={0.5}
+          eventHandlers={{
+            click: () => onSelectEvent(event),
+          }}
         >
-          <CircleMarker
-            center={[event.geo.latitude, event.geo.longitude]}
-            radius={
-              Math.log(locationToEventCount.get(event.geo.state) || 1) * 10 + 2
-            }
-            fillColor={"red"}
-            color="red"
-            weight={1}
-            opacity={0.5}
-            fillOpacity={0.5}
-            eventHandlers={{
-              click: () => onSelectEvent(event),
-            }}
-          >
-            <Popup>
-              <div className="bg-white shadow-md rounded-lg p-4 mb-4">
-                <p className="text-gray-800 mb-2">{event.title}</p>
-                <div className="flex justify-between text-sm text-gray-500">
-                  <span>
-                    <a
-                      href={`https://twitter.com/i/web/status/${event.tweets[0].id}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-blue-500 hover:underline"
-                    >
-                      View on Twitter
-                    </a>
-                  </span>
-                </div>
+          <Popup>
+            <div className="bg-white shadow-md rounded-lg p-4 mb-4">
+              <p className="text-gray-800 mb-2">{event.title}</p>
+              <div className="flex justify-between text-sm text-gray-500">
+                <span>
+                  <a
+                    href={`https://twitter.com/i/web/status/${event.tweets[0].id}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-500 hover:underline"
+                  >
+                    View on Twitter
+                  </a>
+                </span>
               </div>
-            </Popup>
-          </CircleMarker>
-        </motion.div>
+            </div>
+          </Popup>
+        </CircleMarker>
       ))}
     </MapContainer>
   );
