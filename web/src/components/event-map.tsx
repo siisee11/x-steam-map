@@ -167,6 +167,20 @@ const EventMapContent: React.FC<MapProps> = ({ onSelectEvent }) => {
             <Popup>
               <div className="bg-white shadow-md rounded-lg p-4 mb-4">
                 <p className="text-gray-800 mb-2">{event.title}</p>
+                {event.tweets[0].evaluation && (
+                  <p className="text-gray-600 mb-2">
+                    sentiment: {event.tweets[0].evaluation?.sentiment}
+                    aggression: {event.tweets[0].evaluation?.aggression}
+                    urgency: {event.tweets[0].evaluation?.urgency}
+                    virality: {event.tweets[0].evaluation?.virality}
+                    engagement: {event.tweets[0].evaluation?.engagement}
+                    human_impact: {event.tweets[0].evaluation?.human_impact}
+                    economic_impact:{" "}
+                    {event.tweets[0].evaluation?.economic_impact}
+                    environmental_impact:{" "}
+                    {event.tweets[0].evaluation?.environmental_impact}
+                  </p>
+                )}
                 <div className="flex justify-between text-sm text-gray-500">
                   <span>
                     <a

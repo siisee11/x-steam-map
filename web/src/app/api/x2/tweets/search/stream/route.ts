@@ -144,6 +144,7 @@ const evaluateTweet = async (tweet: Tweet) => {
 
     const completion = await response.json();
     const jsonString = completion.choices[0].message.content;
+    console.log("[evaluateTweet] jsonString", jsonString);
     const evaluation = JSON.parse(jsonString) as TweetEvaluation;
     return evaluation;
   } catch (error) {
