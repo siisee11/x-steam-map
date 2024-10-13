@@ -63,8 +63,9 @@ async function connectToStream(
         const tweet = streamTweet.data;
 
         const evaluation = await evaluateTweet(tweet);
-        console.log("evaluation", evaluation);
-
+        if (evaluation) {
+          streamTweet.data.evaluation = evaluation;
+        }
         console.log("streamTweet", streamTweet);
         writer.write(
           encoder.encode(`data: ${JSON.stringify(streamTweet)}\n\n`)
@@ -144,9 +145,13 @@ const evaluateTweet = async (tweet: Tweet) => {
 
     const completion = await response.json();
     const jsonString = completion.choices[0].message.content;
-    console.log("[evaluateTweet] jsonString", jsonString);
-    const evaluation = JSON.parse(jsonString) as TweetEvaluation;
-    return evaluation;
+    const jsonMatch = jsonString.match(/```json([^```]+)```/);
+    if (jsonMatch) {
+      const jsonString = jsonMatch[1].trim(); // Extract and trim the JSON string
+      const evaluation = JSON.parse(jsonString) as TweetEvaluation;
+      return evaluation;
+    }
+    return null;
   } catch (error) {
     console.error("Error evaluating tweet:", error);
     return null;
