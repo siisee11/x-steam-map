@@ -12,6 +12,7 @@ Communities face increasing risks from disasters, while traditional emergency re
 
 ## Solution
 X-Map provides real-time monitoring and predictive analytics of disasters and accidents. By visualizing this data on an interactive map, it enhances situational awareness and ensures predictive warnings are actionable. This empowers users to make timely decisions, improve preparedness, and minimize disaster impacts, strengthening community resilience.
+
 <img width="600" alt="map2" src="https://github.com/user-attachments/assets/bdac1d9c-7c6e-465e-9e23-7d71a3c94133">
 
 
