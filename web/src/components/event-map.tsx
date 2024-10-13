@@ -22,8 +22,8 @@ const EventMap: React.FC<MapProps> = ({ onSelectEvent }) => {
   useEffect(() => {
     console.log("EventMap useEffect");
     const urlParams = new URLSearchParams(window.location.search);
-    const shouldStream = urlParams.get('stream') != 'false';
-    
+    const shouldStream = urlParams.get("stream") != "false";
+
     if (shouldStream) {
       console.log("Starting stream");
       startStream();
@@ -127,13 +127,13 @@ const EventMap: React.FC<MapProps> = ({ onSelectEvent }) => {
           <CircleMarker
             center={[event.geo.latitude, event.geo.longitude]}
             radius={
-              Math.log(locationToEventCount.get(event.geo.state) || 1) * 10 + 10
+              Math.log(locationToEventCount.get(event.geo.state) || 1) * 10 + 2
             }
             fillColor={"red"}
             color="red"
             weight={1}
-            opacity={1}
-            fillOpacity={0.8}
+            opacity={0.5}
+            fillOpacity={0.5}
             eventHandlers={{
               click: () => onSelectEvent(event),
             }}
