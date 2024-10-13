@@ -52,15 +52,15 @@ async function connectToStream(
     response.data.on("data", async (chunk: Buffer) => {
       try {
         const streamTweet: StreamTweet = JSON.parse(chunk.toString());
-        const tweetId = streamTweet.data.id;
-        const tweetRes = await axios.get(
-          `https://api.twitter.com/2/tweets?ids=${tweetId}&tweet.fields=created_at,geo`,
-          {
-            headers: { Authorization: `Bearer ${BEARER_TOKEN}` },
-          }
-        );
-        const tweet = tweetRes.data.data[0];
-        streamTweet.data = tweet;
+        // const tweetId = streamTweet.data.id;
+        // const tweetRes = await axios.get(
+        //   `https://api.twitter.com/2/tweets?ids=${tweetId}&tweet.fields=created_at,geo`,
+        //   {
+        //     headers: { Authorization: `Bearer ${BEARER_TOKEN}` },
+        //   }
+        // );
+        // const tweet = tweetRes.data.data[0];
+        // streamTweet.data = tweet;
         writer.write(
           encoder.encode(`data: ${JSON.stringify(streamTweet)}\n\n`)
         );
