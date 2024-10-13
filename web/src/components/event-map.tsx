@@ -20,6 +20,7 @@ const EventMap: React.FC<MapProps> = ({ onSelectEvent }) => {
   >(new Map());
 
   useEffect(() => {
+    console.log("EventMap useEffect");
     const urlParams = new URLSearchParams(window.location.search);
     const shouldStream = urlParams.get('stream') != 'false';
     
