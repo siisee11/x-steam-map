@@ -119,7 +119,8 @@ const EventMap: React.FC<MapProps> = ({ onSelectEvent }) => {
       />
       {events.map((event, index) => (
         <CircleMarker
-          key={event.created_at}
+          // key={event.created_at}
+          key={index}
           center={[event.geo.latitude, event.geo.longitude]}
           radius={
             Math.log(locationToEventCount.get(event.geo.state) || 1) * 10 + 2
