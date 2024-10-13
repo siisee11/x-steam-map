@@ -27,6 +27,13 @@ interface Tweet {
   edit_history_tweet_ids: string[];
   article: unknown;
   created_at: string;
+  geo: {
+    place_id: string;
+    coordinates: {
+      type: string;
+      coordinates: [number, number];
+    };
+  };
 }
 
 interface StreamTweet {

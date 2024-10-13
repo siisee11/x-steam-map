@@ -41,7 +41,7 @@ async function connectToStream(
 ) {
   try {
     const response = await axios.get(
-      "https://api.x.com/2/tweets/search/stream",
+      "https://api.x.com/2/tweets/search/stream?tweet.fields=geo",
       {
         headers: { Authorization: `Bearer ${BEARER_TOKEN}` },
         responseType: "stream",
@@ -51,7 +51,14 @@ async function connectToStream(
 
     response.data.on("data", async (chunk: Buffer) => {
       try {
-        const streamTweet: StreamTweet = JSON.parse(chunk.toString());
+        const chunkString = chunk.toString();
+        if (chunkString.trim().length === 0) {
+          return;
+        }
+        const streamTweet: StreamTweet = JSON.parse(chunkString);
+        const matchingRules = streamTweet.matching_rules;
+        console.log("matchingRules", matchingRules);
+
         // const tweetId = streamTweet.data.id;
         // const tweetRes = await axios.get(
         //   `https://api.twitter.com/2/tweets?ids=${tweetId}&tweet.fields=created_at,geo`,
