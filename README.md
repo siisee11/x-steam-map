@@ -28,11 +28,13 @@ Residents, Community Organizations, Emergency Reponsders, and Local Governments.
 
 ### Gunshooting Prevention
  - Preemptive Post Detection: X-stream Map detects a teenager’s prophetic post suggesting a potential gun shooting at a park during a community event the next day.
+   <img width="586" alt="Screenshot 2024-10-13 at 9 42 58 AM" src="https://github.com/user-attachments/assets/98db9c09-92b5-4728-a26e-781c658bff40">
  - Alert Issuance: The platform issues real-time notifications to residents, advising them to avoid the park and providing safety tips and emergency contacts.
  - Local Government and Community Reaction: Authorities deploy additional officers to the area to bolster security.
 - Threat Deterrence: The police presence effectively deters the planned shooting before it can occur.
 - Incident Resolution: The situation is managed successfully without any incidents, ensuring community safety.
   
+
 ### Oil Spill Prevention
 - Incident Detection: X-stream Map identifies a fisherman’s tweet about an oil smell and an environmental activist’s photos of an oil slick near the refinery, indicating a potential leak.
 - Alert Issuance: The platform notifies local businesses, fishermen, and environmental agencies to avoid the area and take precautions against contamination.
