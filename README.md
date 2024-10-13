@@ -12,7 +12,7 @@ Communities face increasing risks from disasters, while traditional emergency re
 
 ## Solution
 X-Map provides real-time monitoring and predictive analytics of disasters and accidents. By visualizing this data on an interactive map, it enhances situational awareness and ensures predictive warnings are actionable. This empowers users to make timely decisions, improve preparedness, and minimize disaster impacts, strengthening community resilience.
-<img width="1354" alt="map2" src="https://github.com/user-attachments/assets/bdac1d9c-7c6e-465e-9e23-7d71a3c94133">
+<img width="600" alt="map2" src="https://github.com/user-attachments/assets/bdac1d9c-7c6e-465e-9e23-7d71a3c94133">
 
 
 ## Features
@@ -30,7 +30,7 @@ Residents, Community Organizations, Emergency Reponsders, and Local Governments.
 
 ### Gunshooting Prevention
  - Preemptive Post Detection: X-stream Map detects a teenager’s prophetic post suggesting a potential gun shooting at a park during a community event the next day.
-   <img width="400" alt="Screenshot 2024-10-13 at 9 42 58 AM" src="https://github.com/user-attachments/assets/98db9c09-92b5-4728-a26e-781c658bff40">
+   <img width="600" alt="Screenshot 2024-10-13 at 9 42 58 AM" src="https://github.com/user-attachments/assets/98db9c09-92b5-4728-a26e-781c658bff40">
  - Alert Issuance: The platform issues real-time notifications to residents, advising them to avoid the park and providing safety tips and emergency contacts.
  - Local Government and Community Reaction: Authorities deploy additional officers to the area to bolster security.
 - Threat Deterrence: The police presence effectively deters the planned shooting before it can occur.
@@ -53,7 +53,8 @@ Residents, Community Organizations, Emergency Reponsders, and Local Governments.
 
 
 ### Technical Architecture
-![Uploading Screenshot 2024-10-13 at 11.59.06 AM.png…]()
+
+<img width="600" alt="Screenshot 2024-10-13 at 11 59 06 AM" src="https://github.com/user-attachments/assets/74c58a18-da7c-4e6f-bdfe-2c915d9fda7a">
 
 
 ### Key Technical Challenges and Considerations:
