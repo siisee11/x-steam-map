@@ -1,4 +1,4 @@
-# X-stream Map
+# X-Map
 Empowering Communities through Real-Time Disaster Awareness.
 
 ## Project Overview
@@ -10,7 +10,7 @@ Communities face increasing risks from disasters, while traditional emergency re
 
 
 ## Solution
-X-stream Map provides real-time monitoring and predictive analytics of disasters and accidents. By visualizing this data on an interactive map, it enhances situational awareness and ensures predictive warnings are actionable. This empowers users to make timely decisions, improve preparedness, and minimize disaster impacts, strengthening community resilience.
+X-Map provides real-time monitoring and predictive analytics of disasters and accidents. By visualizing this data on an interactive map, it enhances situational awareness and ensures predictive warnings are actionable. This empowers users to make timely decisions, improve preparedness, and minimize disaster impacts, strengthening community resilience.
 
 
 ## Features
