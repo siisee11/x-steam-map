@@ -1,13 +1,19 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState, useEffect, useRef } from "react";
-import { MapContainer, TileLayer, Popup, CircleMarker } from "react-leaflet";
+import {
+  MapContainer,
+  TileLayer,
+  Popup,
+  CircleMarker,
+  Marker,
+} from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { StreamTweet } from "../../lib/types/xapi";
 import { MyEvent } from "../../lib/types/event";
 import { stateLocations } from "../../lib/constants/map";
 import { xaiMarker } from "./xai-marker";
 import { useMapContext } from "../contexts/MapContext";
-import html2canvas from 'html2canvas';
+import html2canvas from "html2canvas";
 
 interface MapProps {
   onSelectEvent: (event: MyEvent) => void;
@@ -17,11 +23,19 @@ interface MapProps {
 
 const EventMap: React.FC<MapProps> = ({ onSelectEvent, tweets, onTweets }) => {
   return (
-    <EventMapContent onSelectEvent={onSelectEvent} tweets={tweets} onTweets={onTweets} />
+    <EventMapContent
+      onSelectEvent={onSelectEvent}
+      tweets={tweets}
+      onTweets={onTweets}
+    />
   );
 };
 
-const EventMapContent: React.FC<MapProps> = ({ onSelectEvent, tweets, onTweets }) => {
+const EventMapContent: React.FC<MapProps> = ({
+  onSelectEvent,
+  tweets,
+  onTweets,
+}) => {
   const { setMapRef, events, setEvents } = useMapContext();
   const [isStreaming, setIsStreaming] = useState(false);
   const [locationToEventCount, setLocationToEventCount] = useState<
@@ -129,8 +143,8 @@ const EventMapContent: React.FC<MapProps> = ({ onSelectEvent, tweets, onTweets }
   const takeScreenshot = () => {
     if (mapRef.current) {
       html2canvas(mapRef.current).then((canvas) => {
-        const link = document.createElement('a');
-        link.download = 'map-screenshot.png';
+        const link = document.createElement("a");
+        link.download = "map-screenshot.png";
         link.href = canvas.toDataURL();
         link.click();
       });
@@ -138,7 +152,14 @@ const EventMapContent: React.FC<MapProps> = ({ onSelectEvent, tweets, onTweets }
   };
 
   return (
-    <div ref={mapRef} style={{ height: "800px", width: "100%", backgroundImage: "url('/us_map.jpg')" }} >
+    <div
+      ref={mapRef}
+      style={{
+        height: "800px",
+        width: "100%",
+        backgroundImage: "url('/us_map.jpg')",
+      }}
+    >
       <MapContainer
         center={[39.8283, -98.5795]}
         zoom={4}
@@ -148,60 +169,86 @@ const EventMapContent: React.FC<MapProps> = ({ onSelectEvent, tweets, onTweets }
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         />
-        {events.map((event, index) => (
-          <CircleMarker
-            // key={event.created_at}
-            key={index}
-            center={[event.geo.latitude, event.geo.longitude]}
-            radius={
-              Math.log(locationToEventCount.get(event.geo.state) || 1) * 10 + 2
-            }
-            fillColor={index % 2 === 0 ? "yellow" : "red"}
-            color="red"
-            weight={1}
-            opacity={0.5}
-            fillOpacity={0.5}
-            eventHandlers={{
-              click: () => onSelectEvent(event),
-            }}
-          >
-            <Popup>
-              <div className="bg-white shadow-md rounded-lg p-4 mb-4">
-                <p className="text-gray-800 mb-2">{event.title}</p>
-                {event.tweets[0].evaluation && (
-                  <p className="text-gray-600 mb-2">
-                    sentiment: {event.tweets[0].evaluation?.sentiment}
-                    aggression: {event.tweets[0].evaluation?.aggression}
-                    urgency: {event.tweets[0].evaluation?.urgency}
-                    virality: {event.tweets[0].evaluation?.virality}
-                    engagement: {event.tweets[0].evaluation?.engagement}
-                    human_impact: {event.tweets[0].evaluation?.human_impact}
-                    economic_impact:{" "}
-                    {event.tweets[0].evaluation?.economic_impact}
-                    environmental_impact:{" "}
-                    {event.tweets[0].evaluation?.environmental_impact}
-                  </p>
-                )}
-                <div className="flex justify-between text-sm text-gray-500">
-                  <span>
-                    <a
-                      href={`https://twitter.com/i/web/status/${event.tweets[0].id}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-blue-500 hover:underline"
-                    >
-                      View on Twitter
-                    </a>
-                  </span>
+        {events.map((event, index) =>
+          event.filterRuleIds &&
+          event.filterRuleIds.includes("1845271918171258881") ? (
+            <Marker
+              key={index}
+              position={[event.geo.latitude, event.geo.longitude]}
+              icon={xaiMarker}
+            >
+              <Popup>
+                <div className="bg-white shadow-md rounded-lg p-4 mb-4">
+                  <p className="text-gray-800 mb-2">{event.title}</p>
+                  <div className="flex justify-between text-sm text-gray-500">
+                    <span>
+                      <a
+                        href={`https://twitter.com/i/web/status/${event.tweets[0].id}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-500 hover:underline"
+                      >
+                        View on Twitter
+                      </a>
+                    </span>
+                  </div>
                 </div>
-              </div>
-            </Popup>
-          </CircleMarker>
-        )
-        // )
-      )}
-    </MapContainer>
-  </div>
+              </Popup>
+            </Marker>
+          ) : (
+            <CircleMarker
+              // key={event.created_at}
+              key={index}
+              center={[event.geo.latitude, event.geo.longitude]}
+              radius={
+                Math.log(locationToEventCount.get(event.geo.state) || 1) * 10 +
+                2
+              }
+              fillColor={index % 2 === 0 ? "yellow" : "red"}
+              color="red"
+              weight={1}
+              opacity={0.5}
+              fillOpacity={0.5}
+              eventHandlers={{
+                click: () => onSelectEvent(event),
+              }}
+            >
+              <Popup>
+                <div className="bg-white shadow-md rounded-lg p-4 mb-4">
+                  <p className="text-gray-800 mb-2">{event.title}</p>
+                  {event.tweets[0].evaluation && (
+                    <p className="text-gray-600 mb-2">
+                      sentiment: {event.tweets[0].evaluation?.sentiment}
+                      aggression: {event.tweets[0].evaluation?.aggression}
+                      urgency: {event.tweets[0].evaluation?.urgency}
+                      virality: {event.tweets[0].evaluation?.virality}
+                      engagement: {event.tweets[0].evaluation?.engagement}
+                      human_impact: {event.tweets[0].evaluation?.human_impact}
+                      economic_impact:{" "}
+                      {event.tweets[0].evaluation?.economic_impact}
+                      environmental_impact:{" "}
+                      {event.tweets[0].evaluation?.environmental_impact}
+                    </p>
+                  )}
+                  <div className="flex justify-between text-sm text-gray-500">
+                    <span>
+                      <a
+                        href={`https://twitter.com/i/web/status/${event.tweets[0].id}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-500 hover:underline"
+                      >
+                        View on Twitter
+                      </a>
+                    </span>
+                  </div>
+                </div>
+              </Popup>
+            </CircleMarker>
+          )
+        )}
+      </MapContainer>
+    </div>
   );
 };
 
