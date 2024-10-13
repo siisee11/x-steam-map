@@ -1,11 +1,17 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState, useEffect } from "react";
-import { MapContainer, TileLayer, Popup, CircleMarker } from "react-leaflet";
+import {
+  MapContainer,
+  TileLayer,
+  Popup,
+  CircleMarker,
+  Marker,
+} from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { StreamTweet } from "../../lib/types/xapi";
 import { MyEvent } from "../../lib/types/event";
-import { motion } from "framer-motion";
 import { stateLocations } from "../../lib/constants/map";
+import { xaiMarker } from "./xai-marker";
 
 interface MapProps {
   onSelectEvent: (event: MyEvent) => void;
@@ -90,9 +96,11 @@ const EventMap: React.FC<MapProps> = ({ onSelectEvent }) => {
                     tweets: [tweet],
                     emergency_level: 1,
                     created_at: tweet.created_at,
+                    filterRuleIds: streamTweet.matching_rules?.map((r) => r.id),
                   } as MyEvent,
                 ].slice(0, 100)
               ); // at most 100 events
+              console.log(tweet);
               // updateTweetStats(tweet);
             } catch (e) {
               console.error("Error parsing JSON:", e);
@@ -117,42 +125,69 @@ const EventMap: React.FC<MapProps> = ({ onSelectEvent }) => {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       />
-      {events.map((event, index) => (
-        <CircleMarker
-          // key={event.created_at}
-          key={index}
-          center={[event.geo.latitude, event.geo.longitude]}
-          radius={
-            Math.log(locationToEventCount.get(event.geo.state) || 1) * 10 + 2
-          }
-          fillColor={index % 2 === 0 ? "yellow" : "red"}
-          color="red"
-          weight={1}
-          opacity={0.5}
-          fillOpacity={0.5}
-          eventHandlers={{
-            click: () => onSelectEvent(event),
-          }}
-        >
-          <Popup>
-            <div className="bg-white shadow-md rounded-lg p-4 mb-4">
-              <p className="text-gray-800 mb-2">{event.title}</p>
-              <div className="flex justify-between text-sm text-gray-500">
-                <span>
-                  <a
-                    href={`https://twitter.com/i/web/status/${event.tweets[0].id}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-500 hover:underline"
-                  >
-                    View on Twitter
-                  </a>
-                </span>
+      {events.map((event, index) =>
+        event.filterRuleIds &&
+        event.filterRuleIds.includes("1845271918171258881") ? (
+          <Marker
+            key={index}
+            position={[event.geo.latitude, event.geo.longitude]}
+            icon={xaiMarker}
+          >
+            <Popup>
+              <div className="bg-white shadow-md rounded-lg p-4 mb-4">
+                <p className="text-gray-800 mb-2">{event.title}</p>
+                <div className="flex justify-between text-sm text-gray-500">
+                  <span>
+                    <a
+                      href={`https://twitter.com/i/web/status/${event.tweets[0].id}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-500 hover:underline"
+                    >
+                      View on Twitter
+                    </a>
+                  </span>
+                </div>
               </div>
-            </div>
-          </Popup>
-        </CircleMarker>
-      ))}
+            </Popup>
+          </Marker>
+        ) : (
+          <CircleMarker
+            // key={event.created_at}
+            key={index}
+            center={[event.geo.latitude, event.geo.longitude]}
+            radius={
+              Math.log(locationToEventCount.get(event.geo.state) || 1) * 10 + 2
+            }
+            fillColor={index % 2 === 0 ? "yellow" : "red"}
+            color="red"
+            weight={1}
+            opacity={0.5}
+            fillOpacity={0.5}
+            eventHandlers={{
+              click: () => onSelectEvent(event),
+            }}
+          >
+            <Popup>
+              <div className="bg-white shadow-md rounded-lg p-4 mb-4">
+                <p className="text-gray-800 mb-2">{event.title}</p>
+                <div className="flex justify-between text-sm text-gray-500">
+                  <span>
+                    <a
+                      href={`https://twitter.com/i/web/status/${event.tweets[0].id}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-500 hover:underline"
+                    >
+                      View on Twitter
+                    </a>
+                  </span>
+                </div>
+              </div>
+            </Popup>
+          </CircleMarker>
+        )
+      )}
     </MapContainer>
   );
 };

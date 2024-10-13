@@ -10,4 +10,5 @@ export interface MyEvent {
   tweets: Tweet[];
   emergency_level: number;
   created_at: string; //  "Wed Jan 06 18:40:40 +0000 2021"
+  filterRuleIds?: string[];
 }
