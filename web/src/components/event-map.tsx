@@ -17,7 +17,13 @@ const EventMap: React.FC<MapProps> = ({ onSelectEvent }) => {
   const [tweets, setTweets] = useState<StreamTweet[]>([]);
 
   useEffect(() => {
-    startStream();
+    const urlParams = new URLSearchParams(window.location.search);
+    const shouldStream = urlParams.get('stream') != 'false';
+    
+    if (shouldStream) {
+      console.log("Starting stream");
+      startStream();
+    }
   }, []);
 
   const startStream = async () => {
