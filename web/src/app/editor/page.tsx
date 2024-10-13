@@ -18,6 +18,10 @@ export default function EditorPage() {
 
   const [tweetStats, setTweetStats] = useState<{ total: number, byRule: { [key: string]: number } }>({ total: 0, byRule: {} });
 
+  const [grokRulesInput, setGrokRulesInput] = useState('');
+  const [grokRulesResult, setGrokRulesResult] = useState<StreamRule[]>([]);
+  const [grokRulesIsLoading, setGrokRulesIsLoading] = useState(false);
+
   useEffect(() => {
     fetchStreamRules();
   }, []);
@@ -91,7 +95,7 @@ export default function EditorPage() {
     setTweets([]); // Clear existing tweets when starting a new stream
 
     try {
-      const response = await fetch('/api/x2/tweets/search/stream', {
+      const response = await fetch('/api/x2/tweets/search/stream2', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -120,7 +124,7 @@ export default function EditorPage() {
               const jsonString = line.slice(6); // Remove 'data: ' prefix
               console.log('jsonString', jsonString);
               const tweet: StreamTweet = JSON.parse(jsonString);
-              setTweets((prevTweets) => [...prevTweets, tweet]);
+              setTweets((prevTweets) => [tweet, ...prevTweets]);
               updateTweetStats(tweet);
             } catch (e) {
               console.error('Error parsing JSON:', e);
@@ -190,6 +194,24 @@ export default function EditorPage() {
     }
   };
 
+  const handleStreamRulesGenerate = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setGrokRulesIsLoading(true);
+
+    try {
+      const response = await axios.post('/api/grok/generate-stream-rules', { prompt: grokRulesInput });
+      console.log('response', response.data);
+      const rules: StreamRule[] = response.data;
+      console.log('rules', rules);
+      setGrokRulesResult(rules);
+    //   setGrokResult(response.data);
+    } catch (error) {
+      console.error('Error calling Grok API:', error);
+    } finally {
+      setGrokRulesIsLoading(false);
+    }
+  };
+
   return (
     <div className="flex h-screen w-screen text-black bg-white overflow-hidden">
       {/* Grok API Tester */}
@@ -217,6 +239,31 @@ export default function EditorPage() {
             <pre className="bg-gray-100 p-4 rounded overflow-auto text-black max-h-[50vh]">
               {JSON.stringify(grokResult, null, 2)}
             </pre>
+          </div>
+        )}
+
+        <h1 className="text-2xl font-bold mb-4">Grok API for Twitter Stream Rules</h1>
+        <p>Refer to the link for documentation on how to generate rules: <a className="underline" href="https://developer.x.com/en/docs/x-api/tweets/filtered-stream/integrate/build-a-rule" target="_blank" rel="noreferrer">build-a-rule</a></p>
+        <form onSubmit={handleStreamRulesGenerate} className="mb-4">
+          <input
+            type="text"
+            value={grokRulesInput}
+            onChange={(e) => setGrokRulesInput(e.target.value)}
+            placeholder="Enter your Grok prompt for rule generation"
+            className="w-full p-2 border rounded text-black"
+          />
+          <button
+            type="submit"
+            disabled={grokRulesIsLoading}
+            className="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+          >
+            {grokRulesIsLoading ? 'Generating...' : 'Generate Rules'}
+          </button>
+        </form>
+        {grokRulesResult && (
+          <div>
+            <h2 className="text-xl font-semibold mb-2">Generated Rules:</h2>
+            <RulesList rules={grokRulesResult} onAdd={addStreamRule} />
           </div>
         )}
       </div>
@@ -254,8 +301,8 @@ export default function EditorPage() {
         {/* Example stream rules */}
         <div className="mb-4">
           <h2 className="text-xl font-semibold mb-2">Example Stream Rules:</h2>
-          <RulesList rules={exampleRules} />
-          {exampleRules.map((rule, index) => (
+          <RulesList rules={exampleRules} onAdd={addStreamRule}/>
+          {/* {exampleRules.map((rule, index) => (
             <button
               key={index}
               onClick={() => addStreamRule(rule.value)}
@@ -263,7 +310,7 @@ export default function EditorPage() {
             >
               Add {rule.tag || rule.value}
             </button>
-          ))}
+          ))} */}
         </div>
 
        
@@ -276,12 +323,12 @@ export default function EditorPage() {
         <div className="mb-4">
           <h2 className="text-xl font-semibold mb-2">Stream Status:</h2>
           <p>Total tweets: {tweetStats.total}</p>
-          <h3 className="text-lg font-semibold mt-2 mb-1">Tweets per rule:</h3>
+          {/* <h3 className="text-lg font-semibold mt-2 mb-1">Tweets per rule:</h3>
           <ul>
             {Object.entries(tweetStats.byRule).map(([rule, count]) => (
               <li key={rule}>{rule}: {count}</li>
             ))}
-          </ul>
+          </ul> */}
         </div>
 
         {!isStreaming ? (
