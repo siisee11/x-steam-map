@@ -34,11 +34,23 @@ interface Tweet {
       coordinates: [number, number];
     };
   };
+  evaluation?: TweetEvaluation;
 }
 
 interface StreamTweet {
   data: Tweet;
   matching_rules: Pick<StreamRule, "id" | "tag">[];
+}
+
+interface TweetEvaluation {
+  sentiment: number;
+  aggression: number;
+  urgency: number;
+  virality: number;
+  engagement: number;
+  human_impact: number;
+  economic_impact: number;
+  environmental_impact: number;
 }
 
 export type {
@@ -48,4 +60,5 @@ export type {
   StreamRuleError,
   StreamTweet,
   Tweet,
+  TweetEvaluation,
 };
