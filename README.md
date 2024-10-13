@@ -51,11 +51,12 @@ Residents, Community Organizations, Emergency Reponsders, and Local Governments.
 - Incident Resolution: The timely alerts ensure a safe evacuation, significantly reducing injury risks and enhancing community safety.
 
 
-## Changes
+### Key Technical Challenges and Considerations:
 
-### 1. Fetch tweets
+- Building a distributed system that can process high-velocity data streams in real time.
+- Developing advanced prediction algorithms to assess post implications accurately.
+- Implementing geospatial mapping and visualization without relying on exact location data or tags.
+- Integrating data from multiple sources, even when inputs conflict.
+- Fine-tuning alert sensitivity to avoid overwhelming users with too many notifications.
+- Filtering out irrelevant or misleading data while ensuring small but critical signs aren’t missed.
 
-```
-npm run dev
-open http://localhost:3000/editor
-```
