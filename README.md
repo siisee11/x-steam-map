@@ -67,5 +67,5 @@ Residents, Community Organizations, Emergency Reponsders, and Local Governments.
 - Implementing geospatial mapping and visualization without relying on exact location data or tags.
 - Integrating data from multiple sources, even when inputs conflict.
 - Fine-tuning alert sensitivity to avoid overwhelming users with too many notifications.
-- Filtering out irrelevant or misleading data while ensuring small but critical signs aren’t missed.
+- Filtering out prank posts and irrelevant data while ensuring small but crucial signals are detected.
 
