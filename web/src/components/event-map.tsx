@@ -69,7 +69,7 @@ const EventMap: React.FC<MapProps> = ({ onSelectEvent }) => {
                     longitude: location.longitude,
                     tweets: [tweet],
                     emergency_level: 1,
-                    created_at: new Date().toISOString(),
+                    created_at: tweet.created_at,
                   } as MyEvent,
                 ].slice(0, 1000)
               ); // at most 1000 tweets

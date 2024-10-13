@@ -26,6 +26,7 @@ interface Tweet {
   text: string;
   edit_history_tweet_ids: string[];
   article: unknown;
+  created_at: string;
 }
 
 interface StreamTweet {

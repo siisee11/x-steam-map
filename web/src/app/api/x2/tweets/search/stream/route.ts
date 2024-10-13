@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import axios from "axios";
+import { StreamTweet } from "../../../../../../../lib/types/xapi";
 
 const BEARER_TOKEN = process.env.X_BEARER_TOKEN;
 
@@ -48,12 +49,21 @@ async function connectToStream(
       }
     );
 
-    response.data.on("data", (chunk: Buffer) => {
+    response.data.on("data", async (chunk: Buffer) => {
       try {
-        const jsonData = JSON.parse(chunk.toString());
-        console.log("stream", jsonData);
-        // Ensure we're sending data in the correct SSE format
-        writer.write(encoder.encode(`data: ${JSON.stringify(jsonData)}\n\n`));
+        const streamTweet: StreamTweet = JSON.parse(chunk.toString());
+        const tweetId = streamTweet.data.id;
+        const tweetRes = await axios.get(
+          `https://api.twitter.com/2/tweets?ids=${tweetId}&tweet.fields=created_at,geo`,
+          {
+            headers: { Authorization: `Bearer ${BEARER_TOKEN}` },
+          }
+        );
+        const tweet = tweetRes.data.data[0];
+        streamTweet.data = tweet;
+        writer.write(
+          encoder.encode(`data: ${JSON.stringify(streamTweet)}\n\n`)
+        );
       } catch (error) {
         console.error("Error parsing chunk:", error);
       }
