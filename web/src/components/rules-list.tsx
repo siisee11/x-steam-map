@@ -6,7 +6,7 @@ const RulesList = ({
   onRemove,
   onAdd,
 }: {
-  rules: StreamRule[];
+  rules: StreamRule[] | Pick<StreamRule, "value" | "tag">[];
   onRemove?: (value: string) => void;
   onAdd?: (value: string, tag?: string) => void;
 }) => {
@@ -25,7 +25,7 @@ const RulesList = ({
         <tbody>
           {rules.map((rule, index) => (
             <tr key={index} className="border-b">
-              <td className="px-4 py-2">{rule.id}</td>
+              <td className="px-4 py-2">{"id" in rule ? rule.id : ""}</td>
               <td className="px-4 py-2">{rule.value}</td>
               <td className="px-4 py-2">{rule.tag || ""}</td>
               {onRemove && (
