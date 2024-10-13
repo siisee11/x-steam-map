@@ -4,6 +4,7 @@ Empowering Communities through Real-Time Disaster Awareness.
 ## Project Overview
 X-stream Map is a Real-Time Emergency Monitoring Platform that uses X stream data to monitor, predict, and display natural and human-made disasters on an interactive map. It enables communities and responders to make swift, informed decisions, enhancing preparedness and reducing crisis impacts.
 
+![xmap](https://github.com/user-attachments/assets/dd035e1d-5ac2-420d-9f1e-fdc41d3a284d)
 
 ## Problem
 Communities face increasing risks from disasters, while traditional emergency response systems often result in delayed reactions. Predictive symptoms and early warnings frequently go unnoticed, leading to missed opportunities for prevention and increased damage. A comprehensive platform is needed to leverage real-time data and improve emergency preparedness.
