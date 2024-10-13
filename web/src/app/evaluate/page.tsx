@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Image from 'next/image';
+import OctagonChart from './OctagonChart';
 
 export default function EvalPage() {
   const [visionScores, setVisionScores] = useState<number[]>([]);
@@ -16,10 +17,10 @@ export default function EvalPage() {
     "Aggression",
     "Urgency",
     "Virality",
-    "Engagement",
-    "Human Impact",
-    "Economic Impact",
-    "Environmental Impact"
+    "Engage",
+    "Human",
+    "Economic",
+    "Environment"
   ];
 
   useEffect(() => {
@@ -50,22 +51,20 @@ export default function EvalPage() {
         <p className="text-lg">{text}</p>
       </div>
       
-      <div className="mb-6">
-        <h2 className="text-2xl font-semibold mb-2">Grok Vision Preview Results</h2>
-        <ul className="list-disc list-inside">
-          {visionScores.map((score, index) => (
-            <li key={index}> {factors[index]} {score}</li>
-          ))}
-        </ul>
-      </div>
-      
-      <div className="mb-6">
-        <h2 className="text-2xl font-semibold mb-2">Grok Mini Results</h2>
-        <ul className="list-disc list-inside">
-          {miniScores.map((score, index) => (
-            <li key={index}> {factors[index]} {score}</li>
-          ))}
-        </ul>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-6">
+        <div>
+          <h2 className="text-2xl font-semibold mb-2">Grok Vision Preview Results</h2>
+          <div className="w-full aspect-square">
+            <OctagonChart scores={visionScores} factors={factors} />
+          </div>
+        </div>
+        
+        <div>
+          <h2 className="text-2xl font-semibold mb-2">Grok Mini Results</h2>
+          <div className="w-full aspect-square">
+            <OctagonChart scores={miniScores} factors={factors} />
+          </div>
+        </div>
       </div>
     </div>
   );

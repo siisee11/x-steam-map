@@ -1,18 +1,21 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import Head from "next/head";
 import dynamic from "next/dynamic";
 import { MyEvent } from "../../lib/types/event";
 import SplashScreen from "../components/splansh-screen";
 import ChatBot from "../components/chatbot";
 import { MapProvider } from "../contexts/MapContext";
+import axios from 'axios';
+import { StreamTweet } from "../../lib/types/xapi";
 
 const EventMap = dynamic(() => import("../components/event-map"), {
   loading: () => <p>Loading map...</p>,
   ssr: false,
 });
+
 
 export default function Home() {
   const [selectedEvent, setSelectedEvent] = useState<MyEvent | null>(null);
@@ -20,6 +23,31 @@ export default function Home() {
   const [backgroundIndex, setBackgroundIndex] = useState(0);
   const [fadeOut, setFadeOut] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const [liveStreamTexts, setLiveStreamTexts] = useState<string[]>([]);
+  const [summaryText, setSummaryText] = useState<string>("");
+  const [tweets, setTweets] = useState<StreamTweet[]>([]);
+  const [lastStreamIndex, setLastStreamIndex] = useState<number>(0)
+  const textRef = useRef<HTMLSpanElement>(null);
+
+  useEffect(() => {
+    let position = 100; // Start position (percentage)
+    const speed = 0.1;    // Speed of scrolling
+
+    const animateText = () => {
+      const element = textRef.current;
+      if (element) {
+        position -= speed;
+        if (position < -50) {
+          position = 100;
+          setSummaryText("");
+        }
+        element.style.transform = `translateX(${position}%)`;
+      }
+      requestAnimationFrame(animateText); // Loop the animation
+    };
+
+    animateText(); // Start the animation
+  }, []);
 
   const backgrounds = [
     "/cnn_background0.jpg",
@@ -38,6 +66,16 @@ export default function Home() {
 
     return () => clearInterval(intervalId);
   }, []);
+
+  useEffect(() => {
+    const newTweets = tweets.slice(lastStreamIndex);
+    console.log("newTweets", newTweets.length)
+    console.log("innerText", textRef.current?.innerText)
+    if (!textRef.current?.innerText && newTweets.length > 0) {
+      setLiveStreamTexts(newTweets.map((tweet) => tweet.data.text));
+      setLastStreamIndex(tweets.length);
+    }
+  }, [tweets, lastStreamIndex]);
 
   const handleSplashAnimationComplete = (completed: boolean) => {
     setShowSplashScreen(false);
@@ -61,6 +99,20 @@ export default function Home() {
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [toggleChat]);
+  useEffect(()=> {
+    const summarizeWithLLM = async ()=> {
+      if (liveStreamTexts.length == 0) return;
+  
+      const text = liveStreamTexts
+        .map((str, index) => `${index + 1}. ${str}`)
+        .join(" ");
+      const response = await axios.post('/api/summarize', { text });
+      const { content } = response.data;
+      console.log("setsummary", content)
+      setSummaryText(content);
+    };
+    summarizeWithLLM();
+  }, [liveStreamTexts])
 
   return (
     <div className="min-h-screen flex flex-col relative">
@@ -77,7 +129,6 @@ export default function Home() {
           <meta name="description" content="Interactive US Event Map" />
           <link rel="icon" href="/favicon.ico" />
         </Head>
-
         <MapProvider>
             <main className="flex-grow flex flex-col items-center p-4 md:p-8 bg-white bg-opacity-80">
               <div className="flex flex-col items-center bg-black text-white p-4 rounded-lg mb-4">
@@ -88,9 +139,16 @@ export default function Home() {
                   an interactive map.
                 </h3>
               </div>
+              <div className="relative overflow-hidden h-8 bg-gray-100 mb-4 w-full">
+                <div className="whitespace-nowrap animate-ticker absolute right-full text-black">
+                  <span className="scroll-text" ref={textRef}>
+                    {summaryText}
+                  </span>
+                </div>
+              </div>
               <div className="flex-grow flex justify-center items-center w-full max-w-[1080px]">
                 {showSplashScreen && <SplashScreen onAnimationComplete={handleSplashAnimationComplete} />}
-                {!showSplashScreen && <EventMap onSelectEvent={setSelectedEvent} />}
+                {!showSplashScreen && <EventMap onSelectEvent={setSelectedEvent} tweets={tweets} onTweets={setTweets}/>}
               </div>
               {selectedEvent && (
                 <div className="mt-4 bg-white bg-opacity-90 p-4 rounded-lg">
@@ -120,7 +178,7 @@ export default function Home() {
             >
               <ChatBot />
             </div>
-    </MapProvider>
+        </MapProvider>
       </div>
     </div>
   );

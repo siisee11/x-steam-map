@@ -11,19 +11,19 @@ import html2canvas from 'html2canvas';
 
 interface MapProps {
   onSelectEvent: (event: MyEvent) => void;
+  tweets: StreamTweet[];
+  onTweets: React.Dispatch<React.SetStateAction<StreamTweet[]>>;
 }
 
-const EventMap: React.FC<MapProps> = ({ onSelectEvent }) => {
+const EventMap: React.FC<MapProps> = ({ onSelectEvent, tweets, onTweets }) => {
   return (
-    <EventMapContent onSelectEvent={onSelectEvent} />
+    <EventMapContent onSelectEvent={onSelectEvent} tweets={tweets} onTweets={onTweets} />
   );
 };
 
-const EventMapContent: React.FC<MapProps> = ({ onSelectEvent }) => {
+const EventMapContent: React.FC<MapProps> = ({ onSelectEvent, tweets, onTweets }) => {
   const { setMapRef, events, setEvents } = useMapContext();
-  // const mapContainerRef = useRef<HTMLDivElement>(null);
   const [isStreaming, setIsStreaming] = useState(false);
-  const [tweets, setTweets] = useState<StreamTweet[]>([]);
   const [locationToEventCount, setLocationToEventCount] = useState<
     Map<string, number>
   >(new Map());
@@ -48,7 +48,7 @@ const EventMapContent: React.FC<MapProps> = ({ onSelectEvent }) => {
 
   const startStream = async () => {
     setIsStreaming(true);
-    setTweets([]); // Clear existing tweets when starting a new stream
+    onTweets([]); // Clear existing tweets when starting a new stream
 
     try {
       const response = await fetch("/api/x2/tweets/search/stream", {
@@ -79,9 +79,10 @@ const EventMapContent: React.FC<MapProps> = ({ onSelectEvent }) => {
               const jsonString = line.slice(6); // Remove 'data: ' prefix
               const streamTweet: StreamTweet = JSON.parse(jsonString);
               const tweet = streamTweet.data;
-              setTweets((prevTweets) =>
+              onTweets((prevTweets) =>
                 [...prevTweets, streamTweet].slice(0, 1000)
               ); // at most 1000 tweets
+
               // get random state location
               const state = Array.from(stateLocations.keys())[
                 Math.floor(Math.random() * stateLocations.size)
