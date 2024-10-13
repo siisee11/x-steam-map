@@ -12,6 +12,7 @@ Communities face increasing risks from disasters, while traditional emergency re
 
 ## Solution
 X-Map provides real-time monitoring and predictive analytics of disasters and accidents. By visualizing this data on an interactive map, it enhances situational awareness and ensures predictive warnings are actionable. This empowers users to make timely decisions, improve preparedness, and minimize disaster impacts, strengthening community resilience.
+<img width="1354" alt="map2" src="https://github.com/user-attachments/assets/bdac1d9c-7c6e-465e-9e23-7d71a3c94133">
 
 
 ## Features
@@ -49,6 +50,10 @@ Residents, Community Organizations, Emergency Reponsders, and Local Governments.
 - Alert Issuance: Notifications are sent to residents, visitors in the town, and travelers planning to visit. Unlike traditional systems that only alert registered residents, X-stream Map informs those outside the town about the emergency.
 - Community Response: Residents evacuate promptly, minimizing danger, while travelers change plans, deterring incoming tourists and easing evacuation traffic.
 - Incident Resolution: The timely alerts ensure a safe evacuation, significantly reducing injury risks and enhancing community safety.
+
+
+### Technical Architecture
+![Uploading Screenshot 2024-10-13 at 11.59.06 AM.png…]()
 
 
 ### Key Technical Challenges and Considerations:
