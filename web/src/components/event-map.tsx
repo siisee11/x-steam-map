@@ -125,33 +125,34 @@ const EventMap: React.FC<MapProps> = ({ onSelectEvent }) => {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       />
-      {events.map((event, index) =>
-        event.filterRuleIds &&
-        event.filterRuleIds.includes("1845271918171258881") ? (
-          <Marker
-            key={index}
-            position={[event.geo.latitude, event.geo.longitude]}
-            icon={xaiMarker}
-          >
-            <Popup>
-              <div className="bg-white shadow-md rounded-lg p-4 mb-4">
-                <p className="text-gray-800 mb-2">{event.title}</p>
-                <div className="flex justify-between text-sm text-gray-500">
-                  <span>
-                    <a
-                      href={`https://twitter.com/i/web/status/${event.tweets[0].id}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-blue-500 hover:underline"
-                    >
-                      View on Twitter
-                    </a>
-                  </span>
-                </div>
-              </div>
-            </Popup>
-          </Marker>
-        ) : (
+      {events.map(
+        (event, index) => (
+          // event.filterRuleIds &&
+          // event.filterRuleIds.includes("1845271918171258881") ? (
+          //   <Marker
+          //     key={index}
+          //     position={[event.geo.latitude, event.geo.longitude]}
+          //     icon={xaiMarker}
+          //   >
+          //     <Popup>
+          //       <div className="bg-white shadow-md rounded-lg p-4 mb-4">
+          //         <p className="text-gray-800 mb-2">{event.title}</p>
+          //         <div className="flex justify-between text-sm text-gray-500">
+          //           <span>
+          //             <a
+          //               href={`https://twitter.com/i/web/status/${event.tweets[0].id}`}
+          //               target="_blank"
+          //               rel="noopener noreferrer"
+          //               className="text-blue-500 hover:underline"
+          //             >
+          //               View on Twitter
+          //             </a>
+          //           </span>
+          //         </div>
+          //       </div>
+          //     </Popup>
+          //   </Marker>
+          // ) : (
           <CircleMarker
             // key={event.created_at}
             key={index}
@@ -187,6 +188,7 @@ const EventMap: React.FC<MapProps> = ({ onSelectEvent }) => {
             </Popup>
           </CircleMarker>
         )
+        // )
       )}
     </MapContainer>
   );
