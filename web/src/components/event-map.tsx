@@ -15,6 +15,9 @@ const EventMap: React.FC<MapProps> = ({ onSelectEvent }) => {
   const [isStreaming, setIsStreaming] = useState(false);
   const [events, setEvents] = useState<MyEvent[]>([]);
   const [tweets, setTweets] = useState<StreamTweet[]>([]);
+  const [locationToEventCount, setLocationToEventCount] = useState<
+    Map<string, number>
+  >(new Map());
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -63,22 +66,32 @@ const EventMap: React.FC<MapProps> = ({ onSelectEvent }) => {
                 [...prevTweets, streamTweet].slice(0, 1000)
               ); // at most 1000 tweets
               // get random state location
-              const location = Array.from(stateLocations.values())[
+              const state = Array.from(stateLocations.keys())[
                 Math.floor(Math.random() * stateLocations.size)
               ];
+              const location = stateLocations.get(state);
+              if (!location) {
+                throw new Error(`State ${state} not found`);
+              }
+              setLocationToEventCount((prevMap) =>
+                prevMap.set(state, (prevMap.get(state) || 0) + 1)
+              );
               setEvents((prevEvents) =>
                 [
                   ...prevEvents,
                   {
                     title: tweet.text,
-                    latitude: location.latitude,
-                    longitude: location.longitude,
+                    geo: {
+                      state: state,
+                      latitude: location.latitude,
+                      longitude: location.longitude,
+                    },
                     tweets: [tweet],
                     emergency_level: 1,
                     created_at: tweet.created_at,
                   } as MyEvent,
-                ].slice(0, 1000)
-              ); // at most 1000 tweets
+                ].slice(0, 100)
+              ); // at most 100 events
               // updateTweetStats(tweet);
             } catch (e) {
               console.error("Error parsing JSON:", e);
@@ -111,8 +124,10 @@ const EventMap: React.FC<MapProps> = ({ onSelectEvent }) => {
           transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
         >
           <CircleMarker
-            center={[event.latitude, event.longitude]}
-            radius={10}
+            center={[event.geo.latitude, event.geo.longitude]}
+            radius={
+              Math.log(locationToEventCount.get(event.geo.state) || 1) * 10 + 10
+            }
             fillColor={"red"}
             color="red"
             weight={1}
@@ -122,7 +137,23 @@ const EventMap: React.FC<MapProps> = ({ onSelectEvent }) => {
               click: () => onSelectEvent(event),
             }}
           >
-            <Popup>{event.title}</Popup>
+            <Popup>
+              <div className="bg-white shadow-md rounded-lg p-4 mb-4">
+                <p className="text-gray-800 mb-2">{event.title}</p>
+                <div className="flex justify-between text-sm text-gray-500">
+                  <span>
+                    <a
+                      href={`https://twitter.com/i/web/status/${event.tweets[0].id}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-500 hover:underline"
+                    >
+                      View on Twitter
+                    </a>
+                  </span>
+                </div>
+              </div>
+            </Popup>
           </CircleMarker>
         </motion.div>
       ))}
