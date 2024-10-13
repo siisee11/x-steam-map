@@ -25,8 +25,27 @@ X-Map provides real-time monitoring and predictive analytics of disasters and ac
 Residents, Community Organizations, Emergency Reponsders, and Local Governments.
 
 ## Use Cases
-tbd 
 
+### Gunshooting Prevention
+ - Preemptive Post Detection: X-stream Map detects a teenager’s prophetic post suggesting a potential gun shooting at a park during a community event the next day.
+ - Alert Issuance: The platform issues real-time notifications to residents, advising them to avoid the park and providing safety tips and emergency contacts.
+ - Local Government and Community Reaction: Authorities deploy additional officers to the area to bolster security.
+- Threat Deterrence: The police presence effectively deters the planned shooting before it can occur.
+- Incident Resolution: The situation is managed successfully without any incidents, ensuring community safety.
+  
+### Oil Spill Prevention
+- Incident Detection: X-stream Map identifies a fisherman’s tweet about an oil smell and an environmental activist’s photos of an oil slick near the refinery, indicating a potential leak.
+- Alert Issuance: The platform notifies local businesses, fishermen, and environmental agencies to avoid the area and take precautions against contamination.
+- Community Response: Fishermen and businesses cease operations, while NGOs mobilize to raise awareness and advocate for government action, coordinating cleanup efforts.
+- Emergency Deployment: Authorities dispatch environmental protection teams to investigate and contain the spill promptly.
+- Economic Impact Mitigation: The alerts help avoid financial losses for local businesses and fishermen, limiting the potential for a larger disaster and protecting the environment.
+  
+### Evacuation from Wildfire
+- Real-Time Fire Detection: X-stream Map detects social media posts about a severe forest fire near tourist neighborhoods.
+- Severity Assessment: The platform evaluates the fire’s severity and initiates immediate action.
+- Alert Issuance: Notifications are sent to residents, visitors in the town, and travelers planning to visit. Unlike traditional systems that only alert registered residents, X-stream Map informs those outside the town about the emergency.
+- Community Response: Residents evacuate promptly, minimizing danger, while travelers change plans, deterring incoming tourists and easing evacuation traffic.
+- Incident Resolution: The timely alerts ensure a safe evacuation, significantly reducing injury risks and enhancing community safety.
 
 
 ## Changes
